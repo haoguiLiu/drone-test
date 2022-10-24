@@ -1,0 +1,39 @@
+kind: pipeline
+type: kubernetes
+name: build-test
+
+clone:
+  disable: true
+  
+steps:
+- name: step1
+  image: node
+  commands:
+  - env
+  #- sleep 10
+  #- whoami
+  #- echo "${aaa} 11123444 ad "
+  #- npm install -g pnpm
+  #- pnpm install
+  #- npm run build
+  - ls -lha
+  #- ls dist
+  #- pwd
+  #- for i in $(seq 1 100); do echo $i && sleep 2; done
+
+- name: deploy-trigger
+  image: liuhaogui/drone-trigger:v0.0.3
+  settings:
+    deploy_servie_id: 1 # devops服务列表查询服务名称对应id，gitlab hook未传递repo id。
+    instance_id: # 目标部署环境实例，可以填写多个环境。环境实例要求无状态部署或vm部署类型。 部署单个服务其他服务不受影响的环境。
+      - 4770
+      - 108
+    users: # 接收消息用户，hook触发执行任务消息通知，非最终任务完成通知，任务完成通知仅发送给任务创建者
+      - alex.liu
+      - haogui.liu
+    # 接收消息群机器人连接，通知阶段同users参数
+    channel:
+      - "link1"
+      - "link2"
+      - "link37fzw"
+      
